@@ -1,0 +1,46 @@
+{
+  "summary": "First-iteration end-to-end testing of NEXUS ARENA. 22/22 backend pytest tests passed. Frontend flows all functional: home, marketplace, game pages, admin login, dashboard, post creation, marketplace listing, account detail. One minor issue: the /admin25 AUTHENTICATE button submit click occasionally does not fire the POST /api/auth/login request (works reliably by pressing Enter). Likely custom-cursor overlay interception. All other click actions worked with force=True.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "AdminLoginPage",
+        "issue": "Clicking [data-testid=\"admin-login-submit\"] with force=True does not always trigger the login network request (first attempt no request was dispatched; loading state briefly toggled). Enter-key submit works consistently. Likely the custom cursor overlay (cursor:none + big cursor div with pointer-events) intercepts the pointerdown on centered buttons.",
+        "selector": "[data-testid=\"admin-login-submit\"]",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Home", "issues": ["Live market feed shows fake/dummy items (Mythic Immortal $890 / Conqueror S28 $1450 / Gold Butterfly $620) even though marketplace is empty and user asked NOT to seed demo listings — likely hardcoded UI content; consider wiring to real listings or removing."]},
+      {"screen": "Account detail (no images)", "issues": ["When a post has no images, main image area shows a game-slug placeholder (e.g. 'ML') with no thumbnail rail — verify intended behavior."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Investigate custom cursor overlay pointer-events interfering with the Authenticate button click (add pointer-events: none to the cursor element, or ensure it does not sit above form buttons). This affects real users too if the overlay eats pointerdown.",
+    "Confirm hero 'Live Market Feed' cards are static UI mock — either wire them to /api/posts (top 3) or remove per the 'no seed listings' requirement.",
+    "Optional: add data-testid=\"marketplace-empty\" so empty-state can be asserted (currently marketplace-grid is not rendered when list is empty)."
+  ],
+  "critical_code_review_comments": [
+    "server.py: login lowercases only for exact match then does a case-insensitive regex fallback — consider normalising usernames on write (all lowercase) to avoid the two-step lookup.",
+    "server.py: /api/upload sets Authorization requirement via Depends(get_current_user) — good; but the frontend uploadImage() sends undefined Authorization header when no token exists — will still 401 correctly.",
+    "server.py: CORS allow_origins=['*'] with allow_credentials=False is fine for JWT-in-header; if cookies are added later, tighten origins.",
+    "server.py: analytics timeline uses ISO string comparison for date range — works because ISO 8601 sorts lexicographically, but note timezone-aware ISO with '+00:00' suffix; consistent because we store the same format.",
+    "AdminLoginPage.jsx: no client-side rate limiting/lockout; brute-force protection relies on backend which currently has none.",
+    "PostForm publish path fine; consider disabling Publish while POST is in flight to avoid double-submit."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py"
+  ],
+  "success_rate": { "backend": "100%", "frontend": "95%" },
+  "test_credentials": "admin / admin25 (from /app/backend/.env). No /app/memory/test_credentials.md file exists — flagged.",
+  "seed_data_creation": "Created 1 UI test post 'UITest Post ML' via admin UI (mobile-legends, $77.5, 300K-900K, phone+fb filled). Left in DB for main agent visibility; also created and cleaned up 'TEST_todelete' via pytest fixture.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend regression suite at /app/backend/tests/backend_test.py covers auth, games, posts CRUD, upload, analytics, RBAC — 22 tests, all pass. Frontend admin login submit is best triggered via keyboard Enter on the password field rather than clicking the button, until the custom-cursor overlay pointer-events issue is resolved. All other admin actions (New Listing, Publish, etc.) work with page.click(..., force=True). Public URL: https://nexus-gaming-hub-16.preview.emergentagent.com. Test post left in marketplace: 'UITest Post ML'.",
+  "rca of the issue": "AdminLoginPage submit click flakiness: page has a custom cursor overlay (body cursor:none + a large positioned div). If that overlay div does not have pointer-events:none, the browser dispatches pointerdown/mouseup on the overlay instead of the button, so React's onSubmit never fires. force=True bypasses Playwright's actionability checks but the browser still routes the event to the topmost element at that coordinate. Fix: ensure the cursor element has pointer-events:none in CSS."
+}
