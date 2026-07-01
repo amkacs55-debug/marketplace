@@ -238,7 +238,7 @@ export const t = {
     support: "Тусламж",
     terms: "Нөхцөл",
     adminLink: "Админ",
-    copyright: "Бүх эрх хуулиар хамгаалагдсан.",
+    copyright: "Developed by Arhat.",
     handmade: "Нарийвчлалтайгаар хийсэн · v1.0",
   },
 
