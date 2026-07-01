@@ -2,7 +2,8 @@ import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Eye, Heart, Zap } from "lucide-react";
-import { formatPrice, GAMES_META } from "../lib/utils";
+import { GAMES_META } from "../lib/utils";
+import { formatMnt, t } from "../lib/i18n";
 import SmartImage from "./SmartImage";
 
 export default function ProductCard({ post, index = 0 }) {
@@ -41,7 +42,6 @@ export default function ProductCard({ post, index = 0 }) {
         style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
         className="relative gradient-border overflow-hidden rounded-2xl bg-[#0B1220]/60 backdrop-blur-xl"
       >
-        {/* Image */}
         <Link to={`/account/${post.id}`} className="block relative aspect-[4/5] overflow-hidden">
           {post.images && post.images[0] ? (
             <>
@@ -72,7 +72,7 @@ export default function ProductCard({ post, index = 0 }) {
             <div className="px-2.5 py-1 rounded-full glass border border-white/10 font-mono text-[9px] tracking-[0.25em] uppercase text-white/80">
               {game.name || post.game_slug}
             </div>
-            <div className="px-2.5 py-1 rounded-full font-mono text-[9px] tracking-[0.25em] uppercase text-white"
+            <div className="px-2.5 py-1 rounded-full font-mono text-[9px] tracking-[0.25em] uppercase"
               style={{ background: `${accent}22`, border: `1px solid ${accent}66`, color: accent }}>
               {post.group}
             </div>
@@ -83,12 +83,9 @@ export default function ProductCard({ post, index = 0 }) {
               <span className="font-mono text-[10px] text-white/70">{post.views || 0}</span>
             </div>
           </div>
-
-          {/* Tilt shine overlay */}
           <div className="pointer-events-none absolute inset-0 tilt-shine z-10" />
         </Link>
 
-        {/* Content */}
         <div className="p-5 flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <Link to={`/account/${post.id}`} className="font-display font-bold text-white text-[15px] leading-snug line-clamp-2 hover:text-cyan-300 transition">
@@ -101,9 +98,9 @@ export default function ProductCard({ post, index = 0 }) {
           <p className="text-xs text-white/50 line-clamp-2">{post.description}</p>
           <div className="flex items-end justify-between mt-2">
             <div>
-              <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40">Price</div>
+              <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40">{t.account.price}</div>
               <div className="font-display font-black text-2xl mt-0.5" style={{ color: accent }}>
-                {formatPrice(post.price)}
+                {formatMnt(post.price)}
               </div>
             </div>
             <Link
@@ -112,12 +109,11 @@ export default function ProductCard({ post, index = 0 }) {
               data-testid={`view-${post.id}`}
             >
               <Zap className="w-3 h-3" style={{ color: accent }} />
-              <span>View Deal</span>
+              <span>Дэлгэрэнгүй</span>
             </Link>
           </div>
         </div>
 
-        {/* Corner brackets */}
         <div className="pointer-events-none absolute top-2 left-2 w-4 h-4 border-l border-t" style={{ borderColor: `${accent}88` }} />
         <div className="pointer-events-none absolute bottom-2 right-2 w-4 h-4 border-r border-b" style={{ borderColor: `${accent}88` }} />
       </motion.div>

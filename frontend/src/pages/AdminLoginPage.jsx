@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Shield, Lock, User } from "lucide-react";
 import { login } from "../lib/api";
 import { useToast } from "../components/Toast";
+import { t } from "../lib/i18n";
 
 export default function AdminLoginPage() {
   const [username, setUsername] = useState("");
@@ -18,11 +19,11 @@ export default function AdminLoginPage() {
     setLoading(true);
     try {
       const data = await login(username, password);
-      toast.success(`Welcome back, ${data.user.username}`);
+      toast.success(`${t.adminLogin.welcome}, ${data.user.username}`);
       nav("/admin");
     } catch (err) {
       const detail = err?.response?.data?.detail;
-      toast.error(typeof detail === "string" ? detail : "Login failed");
+      toast.error(typeof detail === "string" ? detail : t.adminLogin.fail);
     } finally {
       setLoading(false);
     }
@@ -43,13 +44,14 @@ export default function AdminLoginPage() {
               <Shield className="w-5 h-5 text-cyan-300" />
             </div>
           </div>
-          <div className="font-mono text-[10px] tracking-[0.4em] uppercase text-cyan-300 mt-6">Restricted Access</div>
+          <div className="font-mono text-[10px] tracking-[0.4em] uppercase text-cyan-300 mt-6">{t.adminLogin.label}</div>
           <h1 className="font-display font-black text-4xl md:text-5xl mt-3 tracking-tight">
+            {t.adminLogin.title1}{" "}
             <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg, #ffffff, #9D00FF)" }}>
-              Operator Console
+              {t.adminLogin.title2}
             </span>
           </h1>
-          <p className="text-white/50 text-sm mt-3">Authenticate to access the command center.</p>
+          <p className="text-white/50 text-sm mt-3">{t.adminLogin.subtitle}</p>
         </div>
 
         <div className="glass-strong clip-angled p-8 relative overflow-hidden" data-testid="admin-login-panel">
@@ -58,7 +60,7 @@ export default function AdminLoginPage() {
 
           <form onSubmit={submit} className="space-y-5" autoComplete="off">
             <div>
-              <label className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/60 block mb-2">Username</label>
+              <label className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/60 block mb-2">{t.adminLogin.username}</label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <input
@@ -74,7 +76,7 @@ export default function AdminLoginPage() {
             </div>
 
             <div>
-              <label className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/60 block mb-2">Access Key</label>
+              <label className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/60 block mb-2">{t.adminLogin.password}</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                 <input
@@ -94,13 +96,13 @@ export default function AdminLoginPage() {
               className="btn-primary w-full justify-center disabled:opacity-60 mt-4"
               data-testid="admin-login-submit"
             >
-              {loading ? <span className="font-mono">Authenticating…</span> : <span>Authenticate</span>}
+              {loading ? <span className="font-mono">{t.adminLogin.submitting}</span> : <span>{t.adminLogin.submit}</span>}
             </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between font-mono text-[10px] tracking-[0.25em] uppercase text-white/40">
-            <span>Route: /admin25</span>
-            <span className="text-cyan-300">Encrypted · JWT</span>
+            <span>{t.adminLogin.footerLeft}</span>
+            <span className="text-cyan-300">{t.adminLogin.footerRight}</span>
           </div>
         </div>
       </motion.div>

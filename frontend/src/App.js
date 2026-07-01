@@ -71,10 +71,10 @@ function NotFound() {
   return (
     <div className="min-h-[80vh] grid place-items-center">
       <div className="text-center">
-        <div className="font-mono text-[10px] tracking-[0.4em] uppercase text-cyan-300">Error 404</div>
-        <h1 className="font-display font-black text-6xl mt-4">Signal Lost</h1>
-        <p className="text-white/50 mt-3">This dimension does not exist.</p>
-        <a href="/" className="btn-primary inline-flex mt-6">Return to Base</a>
+        <div className="font-mono text-[10px] tracking-[0.4em] uppercase text-cyan-300">Алдаа 404</div>
+        <h1 className="font-display font-black text-6xl mt-4">Холбоо Тасарлаа</h1>
+        <p className="text-white/50 mt-3">Энэ хуудас байхгүй байна.</p>
+        <a href="/" className="btn-primary inline-flex mt-6">Нүүр Рүү Буцах</a>
       </div>
     </div>
   );

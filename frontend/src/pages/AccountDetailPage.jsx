@@ -6,7 +6,8 @@ import { Reveal, SectionLabel } from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
 import SmartImage, { NaturalImage } from "../components/SmartImage";
 import { getPost } from "../lib/api";
-import { GAMES_META, formatPrice } from "../lib/utils";
+import { GAMES_META } from "../lib/utils";
+import { formatMnt, t } from "../lib/i18n";
 import { useToast } from "../components/Toast";
 
 export default function AccountDetailPage() {
@@ -46,8 +47,8 @@ export default function AccountDetailPage() {
     return (
       <div className="min-h-[70vh] grid place-items-center">
         <div className="text-center">
-          <div className="font-display font-black text-3xl">Account Not Found</div>
-          <Link to="/marketplace" className="btn-primary mt-6 inline-flex">Back to Marketplace</Link>
+          <div className="font-display font-black text-3xl">{t.account.notFound}</div>
+          <Link to="/marketplace" className="btn-primary mt-6 inline-flex">{t.account.backToMarket}</Link>
         </div>
       </div>
     );
@@ -62,9 +63,9 @@ export default function AccountDetailPage() {
   const share = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard");
+      toast.success(t.account.copied);
     } catch {
-      toast.error("Failed to copy link");
+      toast.error(t.account.copyFail);
     }
   };
 
@@ -76,12 +77,11 @@ export default function AccountDetailPage() {
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <Reveal>
           <Link to={`/games/${post.game_slug}`} className="inline-flex items-center gap-2 text-white/60 hover:text-white transition font-mono text-[10px] tracking-[0.3em] uppercase" data-testid="back-link">
-            <ArrowLeft className="w-3.5 h-3.5" /> Back to {meta.name || "Games"}
+            <ArrowLeft className="w-3.5 h-3.5" /> {t.account.back} · {meta.name || t.nav.marketplace}
           </Link>
         </Reveal>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Gallery */}
           <div className="lg:col-span-7">
             <Reveal>
               <div className="relative gradient-border rounded-2xl overflow-hidden group cursor-zoom-in"
@@ -132,7 +132,6 @@ export default function AccountDetailPage() {
               </div>
             </Reveal>
 
-            {/* Thumbnails */}
             {images.length > 1 && (
               <Reveal delay={0.1}>
                 <div className="mt-4 grid grid-cols-6 gap-3">
@@ -154,7 +153,6 @@ export default function AccountDetailPage() {
             )}
           </div>
 
-          {/* Info */}
           <div className="lg:col-span-5">
             <Reveal delay={0.05}>
               <SectionLabel color={accent}>{meta.name || post.game_slug} · {post.group}</SectionLabel>
@@ -163,10 +161,10 @@ export default function AccountDetailPage() {
               </h1>
               <div className="flex items-center gap-4 mt-4">
                 <div className="flex items-center gap-1.5 text-white/50 text-sm">
-                  <Eye className="w-4 h-4" /> {post.views || 0} views
+                  <Eye className="w-4 h-4" /> {post.views || 0} {t.account.views}
                 </div>
                 <div className="flex items-center gap-1.5 text-white/50 text-sm">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" /> Verified
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" /> {t.account.verified}
                 </div>
               </div>
             </Reveal>
@@ -174,25 +172,25 @@ export default function AccountDetailPage() {
             <Reveal delay={0.1}>
               <div className="mt-6 glass clip-angled p-6 relative overflow-hidden">
                 <div className="absolute inset-x-0 top-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
-                <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/50">Price</div>
+                <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/50">{t.account.price}</div>
                 <div className="font-display font-black text-5xl mt-1" style={{ color: accent }}>
-                  {formatPrice(post.price)}
+                  {formatMnt(post.price)}
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-3">
                   {post.phone && (
                     <a href={`tel:${post.phone}`} className="btn-primary" data-testid="contact-phone">
                       <Phone className="w-4 h-4" />
-                      <span>Call Now</span>
+                      <span>{t.account.call}</span>
                     </a>
                   )}
                   {post.facebook && (
                     <a href={post.facebook} target="_blank" rel="noreferrer" className="btn-ghost" data-testid="contact-facebook">
                       <Facebook className="w-4 h-4" />
-                      <span>Message</span>
+                      <span>{t.account.message}</span>
                     </a>
                   )}
                   <button
-                    onClick={() => { setFav(!fav); toast.info(fav ? "Removed from favorites" : "Added to favorites"); }}
+                    onClick={() => { setFav(!fav); toast.info(fav ? t.account.favRemove : t.account.favAdd); }}
                     className={`w-11 h-11 grid place-items-center rounded-lg border transition ${
                       fav ? "border-pink-400/60 text-pink-400 bg-pink-400/10" : "border-white/10 text-white/70 hover:border-pink-400/60 hover:text-pink-400"
                     }`}
@@ -213,34 +211,33 @@ export default function AccountDetailPage() {
 
             <Reveal delay={0.15}>
               <div className="mt-6">
-                <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/50 mb-3">Description</div>
+                <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/50 mb-3">{t.account.description}</div>
                 <p className="text-white/70 leading-relaxed whitespace-pre-wrap">{post.description}</p>
               </div>
             </Reveal>
 
             <Reveal delay={0.2}>
               <div className="mt-8 grid grid-cols-2 gap-3">
-                {[
-                  { icon: ShieldCheck, label: "Ownership", value: "Full Transfer" },
-                  { icon: Zap, label: "Handover", value: "<60s" },
-                ].map((s, i) => (
-                  <div key={i} className="glass p-4 clip-angled-sm">
-                    <s.icon className="w-4 h-4 mb-2" style={{ color: accent2 }} />
-                    <div className="font-display font-bold text-base">{s.value}</div>
-                    <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-white/50 mt-1">{s.label}</div>
-                  </div>
-                ))}
+                <div className="glass p-4 clip-angled-sm">
+                  <ShieldCheck className="w-4 h-4 mb-2" style={{ color: accent2 }} />
+                  <div className="font-display font-bold text-base">{t.account.fullTransfer}</div>
+                  <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-white/50 mt-1">{t.account.ownership}</div>
+                </div>
+                <div className="glass p-4 clip-angled-sm">
+                  <Zap className="w-4 h-4 mb-2" style={{ color: accent2 }} />
+                  <div className="font-display font-bold text-base">{t.account.handoverValue}</div>
+                  <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-white/50 mt-1">{t.account.handover}</div>
+                </div>
               </div>
             </Reveal>
           </div>
         </div>
 
-        {/* Related */}
         {related && related.length > 0 && (
           <section className="mt-24">
             <Reveal>
-              <SectionLabel color={accent}>Related Loadouts</SectionLabel>
-              <h2 className="font-display font-black text-3xl md:text-4xl mt-4">You Might Also Like</h2>
+              <SectionLabel color={accent}>{t.account.relatedLabel}</SectionLabel>
+              <h2 className="font-display font-black text-3xl md:text-4xl mt-4">{t.account.relatedTitle}</h2>
             </Reveal>
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {related.map((p, i) => (
@@ -251,7 +248,6 @@ export default function AccountDetailPage() {
         )}
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox && images[active] && (
           <motion.div

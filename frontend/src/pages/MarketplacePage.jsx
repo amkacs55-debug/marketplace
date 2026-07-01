@@ -1,17 +1,19 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Reveal, SectionLabel } from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
+import EmptyState from "../components/EmptyState";
 import { listPosts } from "../lib/api";
 import { GAMES_META, GROUPS } from "../lib/utils";
+import { t } from "../lib/i18n";
 
 const SORTS = [
-  { value: "newest", label: "Newest" },
-  { value: "oldest", label: "Oldest" },
-  { value: "price_desc", label: "Highest Price" },
-  { value: "price_asc", label: "Lowest Price" },
+  { value: "newest", label: t.market.sortNewest },
+  { value: "oldest", label: t.market.sortOldest },
+  { value: "price_desc", label: t.market.sortHigh },
+  { value: "price_asc", label: t.market.sortLow },
 ];
 
 export default function MarketplacePage() {
@@ -25,7 +27,7 @@ export default function MarketplacePage() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    const t = setTimeout(() => {
+    const tm = setTimeout(() => {
       setLoading(true);
       const p = {};
       if (q) p.q = q;
@@ -40,39 +42,40 @@ export default function MarketplacePage() {
         .catch(() => setItems([]))
         .finally(() => setLoading(false));
 
-      // Update URL
       const sp = new URLSearchParams();
       Object.entries(p).forEach(([k, v]) => v && sp.set(k, v));
       setParams(sp, { replace: true });
     }, 250);
-    return () => clearTimeout(t);
+    return () => clearTimeout(tm);
   }, [q, sort, game, group]); // eslint-disable-line
 
   const clearFilters = () => {
     setQ(""); setSort("newest"); setGame(""); setGroup("");
   };
 
+  const hasFilters = q || game || group || sort !== "newest";
+
   return (
     <div className="relative pt-32 pb-24">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <Reveal>
-          <SectionLabel>Curated Arsenal</SectionLabel>
+          <SectionLabel>{t.market.label}</SectionLabel>
           <div className="flex flex-wrap items-end justify-between gap-6 mt-4">
             <div>
               <h1 className="font-display font-black text-5xl md:text-6xl tracking-tight">
-                The <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg, #00F0FF, #9D00FF)" }}>Marketplace</span>
+                {t.market.title1}{" "}
+                <span className="bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(120deg, #00F0FF, #9D00FF)" }}>{t.market.title2}</span>
               </h1>
               <p className="mt-3 text-white/60 max-w-xl">
-                Every account curated. Every drop verified. Filter, hunt, conquer.
+                {t.market.subtitle}
               </p>
             </div>
             <div className="font-mono text-[11px] tracking-[0.3em] uppercase text-white/50">
-              <span className="text-cyan-300 font-bold">{total}</span> · Listings
+              <span className="text-cyan-300 font-bold">{total}</span> · {t.market.listingsCounter}
             </div>
           </div>
         </Reveal>
 
-        {/* Filters */}
         <Reveal delay={0.1}>
           <div className="mt-10 glass clip-angled p-4 md:p-5 flex flex-col lg:flex-row lg:items-center gap-4">
             <div className="relative flex-1 min-w-[200px]">
@@ -81,7 +84,7 @@ export default function MarketplacePage() {
                 type="text"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search accounts, skins, ranks..."
+                placeholder={t.market.searchPlaceholder}
                 data-testid="marketplace-search-input"
                 className="w-full bg-[#05070B]/50 border border-white/10 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 outline-none rounded-lg pl-11 pr-4 py-3 text-sm placeholder:text-white/30"
               />
@@ -89,29 +92,28 @@ export default function MarketplacePage() {
 
             <div className="flex flex-wrap items-center gap-3">
               <Chip
-                items={[{ value: "", label: "All Games" }, ...Object.values(GAMES_META).map((g) => ({ value: g.slug, label: g.name }))]}
+                items={[{ value: "", label: t.market.allGames }, ...Object.values(GAMES_META).map((g) => ({ value: g.slug, label: g.name }))]}
                 value={game}
                 onChange={setGame}
                 dataTestid="filter-game"
               />
               <Chip
-                items={[{ value: "", label: "All Groups" }, ...GROUPS.map((g) => ({ value: g, label: g }))]}
+                items={[{ value: "", label: t.market.allGroups }, ...GROUPS.map((g) => ({ value: g, label: g }))]}
                 value={group}
                 onChange={setGroup}
                 dataTestid="filter-group"
               />
               <Chip items={SORTS} value={sort} onChange={setSort} dataTestid="filter-sort" />
 
-              {(q || game || group || sort !== "newest") && (
+              {hasFilters && (
                 <button onClick={clearFilters} className="text-white/60 hover:text-white flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest" data-testid="filter-clear">
-                  <X className="w-3.5 h-3.5" /> Clear
+                  <X className="w-3.5 h-3.5" /> {t.market.clear}
                 </button>
               )}
             </div>
           </div>
         </Reveal>
 
-        {/* Results */}
         <div className="mt-10 min-h-[300px]">
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -120,16 +122,11 @@ export default function MarketplacePage() {
               ))}
             </div>
           ) : items.length === 0 ? (
-            <div className="glass clip-angled p-16 text-center">
-              <div className="mx-auto w-14 h-14 rounded-full grid place-items-center border border-white/10 mb-4">
-                <SlidersHorizontal className="w-5 h-5 text-white/50" />
-              </div>
-              <div className="font-display font-bold text-2xl">No listings yet</div>
-              <p className="text-white/60 mt-2 max-w-md mx-auto">
-                Either no results match your filters, or the marketplace is empty.
-                Admins can publish accounts from the dashboard.
-              </p>
-            </div>
+            <EmptyState
+              title={t.market.emptyTitle}
+              subtitle={t.market.emptySubtitle}
+              testId="marketplace-empty"
+            />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" data-testid="marketplace-grid">
               {items.map((p, i) => (

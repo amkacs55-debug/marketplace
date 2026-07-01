@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Twitter, Instagram, Youtube, Twitch, Github, MessagesSquare } from "lucide-react";
+import { t } from "../lib/i18n";
 
 export default function Footer() {
   return (
@@ -20,30 +21,29 @@ export default function Footer() {
                 </div>
               </div>
               <div>
-                <div className="font-display font-black text-xl">NEXUS ARENA</div>
-                <div className="font-mono text-[9px] tracking-[0.35em] text-white/50">AAA GAMING MARKETPLACE</div>
+                <div className="font-display font-black text-xl">{t.brand}</div>
+                <div className="font-mono text-[9px] tracking-[0.35em] text-white/50">{t.tagline}</div>
               </div>
             </div>
             <p className="mt-5 text-sm text-white/60 max-w-md leading-relaxed">
-              Curated premium gaming accounts. Battle-tested. Verified. Delivered.
-              Built by legends, for legends.
+              {t.footer.body}
             </p>
             <div className="flex items-center gap-3 mt-6">
               {[Twitter, Instagram, Youtube, Twitch, MessagesSquare, Github].map((Icon, i) => (
-                <a
+                <button
                   key={i}
-                  href="#"
+                  type="button"
                   className="w-9 h-9 grid place-items-center rounded-full border border-white/10 hover:border-cyan-400/60 hover:text-cyan-300 transition text-white/70"
                   aria-label="social"
                 >
                   <Icon className="w-4 h-4" />
-                </a>
+                </button>
               ))}
             </div>
           </div>
 
           <div>
-            <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-4">Games</div>
+            <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-4">{t.footer.games}</div>
             <ul className="space-y-2 text-sm text-white/70">
               <li><Link to="/games/mobile-legends" className="hover:text-white">Mobile Legends</Link></li>
               <li><Link to="/games/pubg-mobile" className="hover:text-white">PUBG Mobile</Link></li>
@@ -52,31 +52,31 @@ export default function Footer() {
           </div>
 
           <div>
-            <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-4">Market</div>
+            <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-4">{t.footer.market}</div>
             <ul className="space-y-2 text-sm text-white/70">
-              <li><Link to="/marketplace" className="hover:text-white">Browse All</Link></li>
-              <li><Link to="/marketplace?sort=newest" className="hover:text-white">Latest Drops</Link></li>
-              <li><Link to="/marketplace?sort=price_desc" className="hover:text-white">Featured</Link></li>
+              <li><Link to="/marketplace" className="hover:text-white">{t.footer.browseAll}</Link></li>
+              <li><Link to="/marketplace?sort=newest" className="hover:text-white">{t.footer.latest}</Link></li>
+              <li><Link to="/marketplace?sort=price_desc" className="hover:text-white">{t.footer.featured}</Link></li>
             </ul>
           </div>
 
           <div>
-            <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-4">Company</div>
+            <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-cyan-300 mb-4">{t.footer.company}</div>
             <ul className="space-y-2 text-sm text-white/70">
-              <li><a href="#" className="hover:text-white">About</a></li>
-              <li><a href="#" className="hover:text-white">Support</a></li>
-              <li><a href="#" className="hover:text-white">Terms</a></li>
-              <li><Link to="/admin25" className="hover:text-white">Admin</Link></li>
+              <li><span className="text-white/60">{t.footer.about}</span></li>
+              <li><span className="text-white/60">{t.footer.support}</span></li>
+              <li><span className="text-white/60">{t.footer.terms}</span></li>
+              <li><Link to="/admin25" className="hover:text-white">{t.footer.adminLink}</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-3 pt-6 border-t border-white/5">
           <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40">
-            © {new Date().getFullYear()} NEXUS ARENA — All battles reserved.
+            © {new Date().getFullYear()} {t.brand} — {t.footer.copyright}
           </div>
           <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40">
-            Handcrafted with precision · v1.0
+            {t.footer.handmade}
           </div>
         </div>
       </div>

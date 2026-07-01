@@ -147,29 +147,26 @@ GAMES_CATALOG = [
     {
         "slug": "mobile-legends",
         "name": "Mobile Legends",
-        "tagline": "Bang Bang — Legends collide in the Land of Dawn.",
+        "tagline": "Домгууд Мөнх Гэрэлт Ертөнцөд Мөргөлддөг.",
         "color": "#0088FF",
         "hero_image": "https://images.unsplash.com/photo-1718632714530-4bb8a792bd51",
-        "stats": {"players": "120M+", "listings": "2.4K", "avg_price": "$140"},
-        "categories": ["Mythic", "Legend", "Skins Bundle", "Rank Boost", "Starter"],
+        "categories": ["Мифийн", "Домогт", "Скин Багц", "Зэрэглэл", "Эхлэлт"],
     },
     {
         "slug": "pubg-mobile",
         "name": "PUBG Mobile",
-        "tagline": "Drop in. Loot up. Dominate the battleground.",
+        "tagline": "Буулт. Олз. Ноёрхол.",
         "color": "#FF7A18",
         "hero_image": "https://images.unsplash.com/photo-1579912436616-f74ceee1ae07",
-        "stats": {"players": "1B+", "listings": "3.1K", "avg_price": "$220"},
-        "categories": ["Conqueror", "Ace", "UC Bundle", "Skins", "Starter"],
+        "categories": ["Conqueror", "Ace", "UC Багц", "Скин", "Эхлэлт"],
     },
     {
         "slug": "standoff-2",
         "name": "Standoff 2",
-        "tagline": "Tactical firefights. Precision. Adrenaline.",
+        "tagline": "Тактиктай. Нарийн. Хатуу.",
         "color": "#4CC2FF",
         "hero_image": "https://images.pexels.com/photos/19964747/pexels-photo-19964747.jpeg",
-        "stats": {"players": "200M+", "listings": "1.8K", "avg_price": "$90"},
-        "categories": ["Legendary", "Immortal", "Knife Skins", "Gold Skins", "Starter"],
+        "categories": ["Домогт", "Immortal", "Хутганы Скин", "Алтан Скин", "Эхлэлт"],
     },
 ]
 
@@ -255,9 +252,27 @@ async def me(user: dict = Depends(get_current_user)):
     return user
 
 # ---------------- Games ----------------
+async def _game_stats(slug: str) -> dict:
+    """Compute real listing count + avg price from published posts."""
+    pipe = [
+        {"$match": {"game_slug": slug, "status": "published"}},
+        {"$group": {"_id": None, "count": {"$sum": 1}, "avg_price": {"$avg": "$price"}, "sum_price": {"$sum": "$price"}}},
+    ]
+    r = await db.posts.aggregate(pipe).to_list(1)
+    if not r:
+        return {"listings": 0, "avg_price": 0, "gmv": 0}
+    d = r[0]
+    return {
+        "listings": int(d.get("count", 0)),
+        "avg_price": round(float(d.get("avg_price", 0) or 0), 0),
+        "gmv": round(float(d.get("sum_price", 0) or 0), 0),
+    }
+
 @api.get("/games")
 async def list_games():
     games = await db.games.find({}, {"_id": 0}).to_list(100)
+    for g in games:
+        g["stats"] = await _game_stats(g["slug"])
     return games
 
 @api.get("/games/{slug}")
@@ -265,6 +280,7 @@ async def get_game(slug: str):
     g = await db.games.find_one({"slug": slug}, {"_id": 0})
     if not g:
         raise HTTPException(status_code=404, detail="Game not found")
+    g["stats"] = await _game_stats(slug)
     return g
 
 # ---------------- Image Upload ----------------

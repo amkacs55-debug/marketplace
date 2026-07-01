@@ -98,7 +98,7 @@ export default function Loader({ onDone }) {
                 </span>
               </div>
               <div className="font-mono text-[10px] tracking-[0.5em] text-white/50 mt-2 uppercase">
-                Initializing Battle Grid
+                Тулааны Сүлжээ Идэвхжиж Байна
               </div>
             </div>
           </div>

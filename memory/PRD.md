@@ -15,7 +15,14 @@ Build the most visually stunning AAA Gaming Marketplace ever created. Cinematic 
 - JWT bearer auth stored in localStorage on frontend
 - Admin seeded on startup
 
-## Implemented (v1.1 — Jan 2026)
+## Implemented (v1.2 — Jan 2026)
+- [x] **Full Mongolian localisation** — every visible string (nav, hero, marketplace, game pages, account detail, admin login, dashboard, post form, footer, toasts, empty states, 404) is Mongolian. Central `/app/frontend/src/lib/i18n.js` dictionary.
+- [x] **Currency in Mongolian Tögrög (₮)** — all prices use `formatMnt(value)` which yields e.g. `1,500,000 ₮` via `Intl.NumberFormat("mn-MN")`. USD symbol fully removed.
+- [x] **All demo content removed** — no placeholder listings, no fake stats. Backend game catalog re-seeded with Mongolian tagline/category strings and NO fake numeric stats. Hero counts, game-page stats, dashboard cards all reflect REAL data from Mongo.
+- [x] **Premium empty states** — new `EmptyState` component with an animated cinematic SVG (rotating outer ring, counter-rotating inner ring, pulsing core cube, four corner sparks) is shown on Home Featured, Marketplace, and every Game page when there are no listings. Message: "Одоогоор бүртгэл байхгүй байна."
+- [x] Real per-game stats endpoint (`/api/games` + `/api/games/{slug}` now include computed `listings`, `avg_price`, `gmv` from live posts).
+
+## Implemented (v1.1)
 - [x] All previous v1.0 features (see git history)
 - [x] **GLB hero model**: KhronosGroup DamagedHelmet loaded via `useGLTF` + drei; floats and rotates inside the energy rings. Suspense fallback to primitive icosahedron if the CDN is unreachable.
 - [x] **Image aspect-ratio preservation everywhere** — uploaded images are NEVER cropped, stretched, or forced into a fixed aspect:

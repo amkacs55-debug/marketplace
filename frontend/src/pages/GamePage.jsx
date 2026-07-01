@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowRight, Users, TrendingUp, Trophy } from "lucide-react";
+import { ArrowRight, TrendingUp, Trophy } from "lucide-react";
 import { Reveal, SectionLabel } from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
+import EmptyState from "../components/EmptyState";
 import { getGame, listPosts } from "../lib/api";
 import { GAMES_META } from "../lib/utils";
+import { formatMnt, formatCount, t } from "../lib/i18n";
 
 export default function GamePage() {
   const { slug } = useParams();
@@ -30,8 +31,8 @@ export default function GamePage() {
     return (
       <div className="min-h-screen grid place-items-center">
         <div className="text-center">
-          <div className="font-display font-black text-3xl">Unknown Battleground</div>
-          <Link to="/" className="btn-primary mt-6 inline-flex">Return Home</Link>
+          <div className="font-display font-black text-3xl">{t.account.unknownGame}</div>
+          <Link to="/" className="btn-primary mt-6 inline-flex">{t.account.returnHome}</Link>
         </div>
       </div>
     );
@@ -39,9 +40,8 @@ export default function GamePage() {
 
   const accent = meta.accent;
   const accent2 = meta.accent2;
-
   const categories = game?.categories || [];
-  const filtered = category === "all" ? posts : posts; // categories exist on posts by tag; for now show all
+  const stats = game?.stats;
 
   return (
     <div className="relative">
@@ -53,7 +53,6 @@ export default function GamePage() {
           <div className="absolute inset-0 grid-bg opacity-30" />
         </div>
 
-        {/* Floating accent orb */}
         <div className="absolute right-10 top-1/4 w-[400px] h-[400px] rounded-full pointer-events-none"
           style={{ background: `radial-gradient(circle, ${accent}55, transparent 70%)`, filter: "blur(60px)" }} />
 
@@ -61,7 +60,7 @@ export default function GamePage() {
           <Reveal>
             <div className="flex items-center gap-3">
               <div className="px-3 py-1.5 rounded-full glass border font-mono text-[10px] tracking-[0.35em] uppercase" style={{ borderColor: `${accent}66`, color: accent2 }}>
-                {meta.short} · Battleground
+                {meta.short} · {t.game.battlegroundBadge}
               </div>
               <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40">/{slug}</span>
             </div>
@@ -80,21 +79,12 @@ export default function GamePage() {
             </div>
           </Reveal>
 
-          {game?.stats && (
+          {stats && (
             <Reveal delay={0.3}>
               <div className="mt-10 grid grid-cols-3 gap-4 max-w-2xl">
-                {[
-                  { icon: Users, label: "Players", value: game.stats.players },
-                  { icon: TrendingUp, label: "Listings", value: game.stats.listings },
-                  { icon: Trophy, label: "Avg Price", value: game.stats.avg_price },
-                ].map((s, i) => (
-                  <div key={i} className="glass p-5 clip-angled-sm relative overflow-hidden">
-                    <div className="absolute inset-x-0 top-0 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
-                    <s.icon className="w-4 h-4 mb-3" style={{ color: accent2 }} />
-                    <div className="font-display font-black text-2xl md:text-3xl">{s.value}</div>
-                    <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-white/50 mt-1">{s.label}</div>
-                  </div>
-                ))}
+                <StatBox icon={TrendingUp} label={t.game.statListings} value={formatCount(stats.listings || 0)} accent={accent} accent2={accent2} />
+                <StatBox icon={Trophy} label={t.game.statAvgPrice} value={formatMnt(stats.avg_price || 0)} accent={accent} accent2={accent2} />
+                <StatBox icon={TrendingUp} label={t.game.statPublished} value={formatCount(stats.listings || 0)} accent={accent} accent2={accent2} />
               </div>
             </Reveal>
           )}
@@ -106,8 +96,8 @@ export default function GamePage() {
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
           <div className="flex items-end justify-between flex-wrap gap-6">
             <Reveal>
-              <SectionLabel color={accent}>Combat Categories</SectionLabel>
-              <h2 className="font-display font-black text-3xl md:text-4xl mt-4">Choose Your Path</h2>
+              <SectionLabel color={accent}>{t.game.categoriesLabel}</SectionLabel>
+              <h2 className="font-display font-black text-3xl md:text-4xl mt-4">{t.game.categoriesTitle}</h2>
             </Reveal>
           </div>
 
@@ -119,7 +109,7 @@ export default function GamePage() {
               }`}
               style={category === "all" ? { borderColor: accent, background: `${accent}22`, color: accent2, boxShadow: `0 0 20px ${accent}55` } : {}}
             >
-              All Accounts
+              {t.game.allAccounts}
             </button>
             {categories.map((c) => (
               <button
@@ -142,9 +132,9 @@ export default function GamePage() {
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
           <div className="flex items-center justify-between mb-8">
             <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/50">
-              {filtered.length} Accounts Available
+              {posts.length} {t.game.accountsCounter}
             </div>
-            <Link to="/marketplace" className="btn-ghost">All Markets <ArrowRight className="w-3.5 h-3.5" /></Link>
+            <Link to="/marketplace" className="btn-ghost">{t.game.allMarkets} <ArrowRight className="w-3.5 h-3.5" /></Link>
           </div>
 
           {loading ? (
@@ -153,22 +143,34 @@ export default function GamePage() {
                 <div key={i} className="aspect-[4/6] glass rounded-2xl animate-pulse" />
               ))}
             </div>
-          ) : filtered.length === 0 ? (
-            <div className="glass clip-angled p-16 text-center">
-              <div className="font-display font-bold text-2xl">No {meta.name} accounts yet</div>
-              <p className="text-white/60 mt-2 max-w-md mx-auto">
-                Our operators are curating premium listings. Check back soon.
-              </p>
-            </div>
+          ) : posts.length === 0 ? (
+            <EmptyState
+              title={t.game.emptyTitle}
+              subtitle={t.game.emptySubtitle}
+              accent={accent}
+              accent2={accent2}
+              testId={`game-${slug}-empty`}
+            />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filtered.map((p, i) => (
+              {posts.map((p, i) => (
                 <ProductCard key={p.id} post={p} index={i} />
               ))}
             </div>
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+function StatBox({ icon: Icon, label, value, accent, accent2 }) {
+  return (
+    <div className="glass p-5 clip-angled-sm relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+      <Icon className="w-4 h-4 mb-3" style={{ color: accent2 }} />
+      <div className="font-display font-black text-2xl md:text-3xl">{value}</div>
+      <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-white/50 mt-1">{label}</div>
     </div>
   );
 }

@@ -3,13 +3,14 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X, Search, Shield, LogOut, ChevronRight } from "lucide-react";
 import { getMe, logout } from "../lib/api";
+import { t } from "../lib/i18n";
 
 const links = [
-  { to: "/", label: "Home" },
-  { to: "/marketplace", label: "Marketplace" },
-  { to: "/games/mobile-legends", label: "Mobile Legends" },
-  { to: "/games/pubg-mobile", label: "PUBG Mobile" },
-  { to: "/games/standoff-2", label: "Standoff 2" },
+  { to: "/", label: t.nav.home },
+  { to: "/marketplace", label: t.nav.marketplace },
+  { to: "/games/mobile-legends", label: t.nav.ml },
+  { to: "/games/pubg-mobile", label: t.nav.pubg },
+  { to: "/games/standoff-2", label: t.nav.so2 },
 ];
 
 export default function Navbar() {
@@ -46,7 +47,6 @@ export default function Navbar() {
       <div className="mx-auto max-w-[1400px] px-4 md:px-8 pt-4">
         <div className="glass-strong clip-angled px-4 md:px-6 py-3 flex items-center justify-between relative overflow-hidden">
           <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-accent-blue/60 to-transparent" />
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-3" data-testid="nav-logo">
             <div className="relative w-9 h-9 grid place-items-center">
               <div className="absolute inset-0 rounded-md" style={{ background: "linear-gradient(135deg, #00F0FF, #9D00FF)" }} />
@@ -55,12 +55,11 @@ export default function Navbar() {
               </div>
             </div>
             <div className="hidden sm:flex flex-col leading-none">
-              <span className="font-display font-black text-lg tracking-tight">NEXUS ARENA</span>
-              <span className="font-mono text-[9px] tracking-[0.3em] text-white/50 mt-0.5">AAA MARKETPLACE</span>
+              <span className="font-display font-black text-lg tracking-tight">{t.brand}</span>
+              <span className="font-mono text-[9px] tracking-[0.3em] text-white/50 mt-0.5">{t.tagline}</span>
             </div>
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-7">
             {links.map((l) => (
               <NavLink
@@ -72,7 +71,7 @@ export default function Navbar() {
                     isActive ? "text-white active" : "text-white/70 hover:text-white"
                   }`
                 }
-                data-testid={`nav-link-${l.label.toLowerCase().replace(/\s+/g, "-")}`}
+                data-testid={`nav-link-${l.to.replace(/\W+/g, "-")}`}
               >
                 {l.label}
               </NavLink>
@@ -86,13 +85,13 @@ export default function Navbar() {
               data-testid="nav-search"
             >
               <Search className="w-4 h-4" />
-              <span className="font-mono text-[10px] tracking-[0.25em] uppercase">Search</span>
+              <span className="font-mono text-[10px] tracking-[0.25em] uppercase">{t.nav.search}</span>
             </Link>
             {user ? (
               <div className="hidden md:flex items-center gap-2">
                 <Link to="/admin" className="btn-ghost !py-2 !px-3" data-testid="nav-admin-dashboard">
                   <Shield className="w-4 h-4" />
-                  <span>Admin</span>
+                  <span>{t.nav.admin}</span>
                 </Link>
                 <button className="btn-ghost !py-2 !px-3" onClick={handleLogout} data-testid="nav-logout">
                   <LogOut className="w-4 h-4" />
@@ -100,7 +99,7 @@ export default function Navbar() {
               </div>
             ) : (
               <Link to="/admin25" className="btn-primary hidden md:inline-flex" data-testid="nav-admin-login">
-                <span>Admin</span>
+                <span>{t.nav.admin}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             )}
@@ -109,7 +108,7 @@ export default function Navbar() {
               onClick={() => setOpen((o) => !o)}
               className="lg:hidden p-2 rounded-md border border-white/10 text-white/90"
               data-testid="nav-mobile-toggle"
-              aria-label="Toggle Menu"
+              aria-label={t.nav.menu}
             >
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -117,7 +116,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -137,18 +135,17 @@ export default function Navbar() {
                       isActive ? "text-white" : "text-white/70"
                     }`
                   }
-                  data-testid={`nav-mobile-${l.label.toLowerCase().replace(/\s+/g, "-")}`}
                 >
                   {l.label}
                 </NavLink>
               ))}
               {user ? (
                 <div className="flex items-center gap-2 mt-2">
-                  <Link to="/admin" className="btn-ghost flex-1 justify-center" onClick={() => setOpen(false)}>Admin</Link>
-                  <button onClick={handleLogout} className="btn-ghost">Logout</button>
+                  <Link to="/admin" className="btn-ghost flex-1 justify-center" onClick={() => setOpen(false)}>{t.nav.admin}</Link>
+                  <button onClick={handleLogout} className="btn-ghost">{t.nav.logout}</button>
                 </div>
               ) : (
-                <Link to="/admin25" className="btn-primary mt-2 justify-center" onClick={() => setOpen(false)}>Admin Login</Link>
+                <Link to="/admin25" className="btn-primary mt-2 justify-center" onClick={() => setOpen(false)}>{t.nav.admin}</Link>
               )}
             </div>
           </motion.div>
