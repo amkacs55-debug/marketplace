@@ -15,7 +15,15 @@ Build the most visually stunning AAA Gaming Marketplace ever created. Cinematic 
 - JWT bearer auth stored in localStorage on frontend
 - Admin seeded on startup
 
-## Implemented (v1.0 — Jan 2026)
+## Implemented (v1.1 — Jan 2026)
+- [x] All previous v1.0 features (see git history)
+- [x] **GLB hero model**: KhronosGroup DamagedHelmet loaded via `useGLTF` + drei; floats and rotates inside the energy rings. Suspense fallback to primitive icosahedron if the CDN is unreachable.
+- [x] **Image aspect-ratio preservation everywhere** — uploaded images are NEVER cropped, stretched, or forced into a fixed aspect:
+  - `SmartImage` component: `object-fit: contain` + blurred backdrop for aesthetic fill in fixed-aspect containers (marketplace cards, thumbnails, admin lists, form previews).
+  - `NaturalImage` component: container height adapts to the image's natural width/height ratio, used for the main gallery image on the Account detail page.
+  - `.img-fit` and `.img-backdrop` CSS utilities in `index.css`.
+
+## Implemented (v1.0)
 - [x] Premium loading screen (particles, energy ring, progress)
 - [x] Custom animated cursor (stretch on hover, magnetic feel)
 - [x] Animated background (aurora, particles canvas, grid, noise, mouse parallax, scan line)

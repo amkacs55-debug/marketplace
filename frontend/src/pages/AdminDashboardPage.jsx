@@ -253,7 +253,7 @@ function OverviewTab({ stats }) {
             {stats.recent.map((p) => (
               <Link key={p.id} to={`/account/${p.id}`} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition">
                 <div className="w-12 h-12 rounded-md overflow-hidden bg-white/5 flex-shrink-0">
-                  {p.images && p.images[0] ? <img src={p.images[0]} alt="" className="img-cover" /> : <div className="w-full h-full grid place-items-center text-xs text-white/40">—</div>}
+                  {p.images && p.images[0] ? <img src={p.images[0]} alt="" className="w-full h-full object-contain" /> : <div className="w-full h-full grid place-items-center text-xs text-white/40">—</div>}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm text-white/90 truncate">{p.title}</div>
@@ -298,8 +298,8 @@ function ListingsTab({ posts, onEdit, onDelete, groupFilter, setGroupFilter, gam
         ) : posts.map((p) => (
           <div key={p.id} className="grid grid-cols-12 gap-4 px-5 py-4 border-b border-white/5 last:border-0 items-center hover:bg-white/[0.02] transition">
             <div className="col-span-5 flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded overflow-hidden bg-white/5 flex-shrink-0">
-                {p.images?.[0] ? <img src={p.images[0]} alt="" className="img-cover" /> : <div className="w-full h-full grid place-items-center text-xs text-white/40">—</div>}
+              <div className="w-10 h-10 rounded overflow-hidden bg-white/5 flex-shrink-0 relative">
+                {p.images?.[0] ? <img src={p.images[0]} alt="" className="w-full h-full object-contain" /> : <div className="w-full h-full grid place-items-center text-xs text-white/40">—</div>}
               </div>
               <div className="truncate">
                 <div className="text-sm text-white/90 truncate">{p.title}</div>

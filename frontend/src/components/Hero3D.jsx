@@ -1,7 +1,44 @@
 import React, { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Environment, MeshDistortMaterial, Sparkles, Stars } from "@react-three/drei";
+import { Float, Environment, MeshDistortMaterial, Sparkles, Stars, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+
+const HELMET_URL = "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/DamagedHelmet/glTF-Binary/DamagedHelmet.glb";
+
+function Helmet({ position = [0, 0, 0], scale = 1.05 }) {
+  const gltf = useGLTF(HELMET_URL);
+  const ref = useRef();
+  useFrame((state, d) => {
+    if (ref.current) {
+      ref.current.rotation.y += d * 0.35;
+      ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 1.2) * 0.12;
+    }
+  });
+  return (
+    <Float speed={1.1} rotationIntensity={0.3} floatIntensity={0.6}>
+      <primitive ref={ref} object={gltf.scene} position={position} scale={scale} />
+    </Float>
+  );
+}
+useGLTF.preload(HELMET_URL);
+
+function CoreFallback({ color = "#00F0FF", color2 = "#9D00FF" }) {
+  const ref = useRef();
+  useFrame((s, d) => {
+    if (ref.current) {
+      ref.current.rotation.y += d * 0.4;
+      ref.current.rotation.x += d * 0.15;
+    }
+  });
+  return (
+    <Float speed={1.4} rotationIntensity={0.6} floatIntensity={1.2}>
+      <mesh ref={ref}>
+        <icosahedronGeometry args={[0.85, 1]} />
+        <meshStandardMaterial color={color} emissive={color2} emissiveIntensity={0.7} roughness={0.15} metalness={0.95} wireframe />
+      </mesh>
+    </Float>
+  );
+}
 
 function EnergyRing({ position = [0, 0, 0], color = "#00F0FF", scale = 1 }) {
   const ref = useRef();
@@ -101,17 +138,19 @@ export default function Hero3D({ accent = "#00F0FF", accent2 = "#9D00FF" }) {
       <pointLight position={[-3, -2, 2]} intensity={1.6} color={accent2} />
       <directionalLight position={[0, 5, 5]} intensity={0.6} />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<CoreFallback color={accent} color2={accent2} />}>
         <Stars radius={30} depth={20} count={1200} factor={2.2} saturation={0} fade speed={0.4} />
         <Sparkles count={80} scale={[8, 5, 5]} size={2} speed={0.4} color={accent} />
 
-        <EnergyRing position={[0, 0.1, 0]} color={accent} scale={1.05} />
-        <EnergyRing position={[0, 0.1, 0]} color={accent2} scale={1.35} />
+        <Helmet position={[0, 0.1, 0]} scale={1.1} />
 
-        <Holo position={[-2.2, 0.5, -0.5]} color={accent} args={[0.5, 0.9, 0.5]} />
-        <Holo position={[2.2, -0.4, -0.3]} color={accent2} args={[0.7, 0.4, 0.6]} />
-        <Icosa position={[1.6, 1.2, 0.2]} color={accent} />
-        <Icosa position={[-1.8, -1.1, 0.4]} color={accent2} />
+        <EnergyRing position={[0, 0.1, 0]} color={accent} scale={1.35} />
+        <EnergyRing position={[0, 0.1, 0]} color={accent2} scale={1.75} />
+
+        <Holo position={[-2.6, 0.6, -0.6]} color={accent} args={[0.5, 0.9, 0.5]} />
+        <Holo position={[2.6, -0.5, -0.4]} color={accent2} args={[0.7, 0.4, 0.6]} />
+        <Icosa position={[2.0, 1.3, 0.2]} color={accent} />
+        <Icosa position={[-2.0, -1.2, 0.4]} color={accent2} />
 
         <Environment preset="night" />
       </Suspense>

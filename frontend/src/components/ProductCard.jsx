@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Eye, Heart, Zap } from "lucide-react";
 import { formatPrice, GAMES_META } from "../lib/utils";
+import SmartImage from "./SmartImage";
 
 export default function ProductCard({ post, index = 0 }) {
   const ref = useRef(null);
@@ -42,19 +43,21 @@ export default function ProductCard({ post, index = 0 }) {
       >
         {/* Image */}
         <Link to={`/account/${post.id}`} className="block relative aspect-[4/5] overflow-hidden">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(180deg, transparent 40%, rgba(5,7,11,0.85) 100%), radial-gradient(400px 220px at 50% 0%, ${accent}33, transparent 60%)`,
-            }}
-          />
           {post.images && post.images[0] ? (
-            <img
-              src={post.images[0]}
-              alt={post.title}
-              loading="lazy"
-              className="img-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.08]"
-            />
+            <>
+              <SmartImage
+                src={post.images[0]}
+                alt={post.title}
+                padding="p-3"
+                imgClassName="transition-transform duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.05]"
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `linear-gradient(180deg, transparent 55%, rgba(5,7,11,0.85) 100%), radial-gradient(400px 220px at 50% 0%, ${accent}22, transparent 60%)`,
+                }}
+              />
+            </>
           ) : (
             <div
               className="w-full h-full grid place-items-center"
@@ -65,7 +68,7 @@ export default function ProductCard({ post, index = 0 }) {
               <div className="font-display font-black text-3xl opacity-40">{game.short || "NX"}</div>
             </div>
           )}
-          <div className="absolute top-3 left-3 flex items-center gap-2">
+          <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
             <div className="px-2.5 py-1 rounded-full glass border border-white/10 font-mono text-[9px] tracking-[0.25em] uppercase text-white/80">
               {game.name || post.game_slug}
             </div>
@@ -74,7 +77,7 @@ export default function ProductCard({ post, index = 0 }) {
               {post.group}
             </div>
           </div>
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-3 right-3 z-10">
             <div className="px-2 py-1 rounded-full glass border border-white/10 flex items-center gap-1">
               <Eye className="w-3 h-3 text-white/70" />
               <span className="font-mono text-[10px] text-white/70">{post.views || 0}</span>
@@ -82,7 +85,7 @@ export default function ProductCard({ post, index = 0 }) {
           </div>
 
           {/* Tilt shine overlay */}
-          <div className="pointer-events-none absolute inset-0 tilt-shine" />
+          <div className="pointer-events-none absolute inset-0 tilt-shine z-10" />
         </Link>
 
         {/* Content */}

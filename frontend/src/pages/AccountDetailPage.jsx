@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Heart, Share2, Phone, Facebook, ShieldCheck, Zap, Eye, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal, SectionLabel } from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
+import SmartImage, { NaturalImage } from "../components/SmartImage";
 import { getPost } from "../lib/api";
 import { GAMES_META, formatPrice } from "../lib/utils";
 import { useToast } from "../components/Toast";
@@ -83,22 +84,22 @@ export default function AccountDetailPage() {
           {/* Gallery */}
           <div className="lg:col-span-7">
             <Reveal>
-              <div className="relative gradient-border rounded-2xl overflow-hidden aspect-[4/3] group cursor-zoom-in"
+              <div className="relative gradient-border rounded-2xl overflow-hidden group cursor-zoom-in"
                 onClick={() => images.length && setLightbox(true)}
                 data-testid="account-main-image"
               >
                 {images[active] ? (
                   <>
-                    <img
+                    <NaturalImage
                       key={active}
                       src={images[active]}
                       alt={post.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.05]"
+                      maxHeight={680}
                     />
-                    <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 60%, rgba(5,7,11,0.6))` }} />
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(180deg, transparent 70%, rgba(5,7,11,0.5))` }} />
                   </>
                 ) : (
-                  <div className="w-full h-full grid place-items-center"
+                  <div className="aspect-[4/3] w-full grid place-items-center"
                     style={{ background: `linear-gradient(135deg, ${accent}22, ${accent2}22)` }}>
                     <div className="font-display font-black text-4xl opacity-40">{meta.short}</div>
                   </div>
@@ -107,19 +108,19 @@ export default function AccountDetailPage() {
                   <>
                     <button
                       onClick={(e) => { e.stopPropagation(); prev(); }}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 grid place-items-center rounded-full glass-strong border border-white/10 opacity-0 group-hover:opacity-100 transition"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 grid place-items-center rounded-full glass-strong border border-white/10 opacity-0 group-hover:opacity-100 transition z-10"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); next(); }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 grid place-items-center rounded-full glass-strong border border-white/10 opacity-0 group-hover:opacity-100 transition"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 grid place-items-center rounded-full glass-strong border border-white/10 opacity-0 group-hover:opacity-100 transition z-10"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </button>
                   </>
                 )}
-                <div className="absolute top-3 left-3 flex items-center gap-2">
+                <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
                   <div className="px-3 py-1.5 rounded-full glass border font-mono text-[10px] tracking-[0.3em] uppercase"
                     style={{ borderColor: `${accent}66`, color: accent2 }}>
                     {meta.name || post.game_slug}
@@ -145,7 +146,7 @@ export default function AccountDetailPage() {
                       style={i === active ? { boxShadow: `0 0 15px ${accent}66` } : {}}
                       data-testid={`thumb-${i}`}
                     >
-                      <img src={img} alt="" className="img-cover" />
+                      <SmartImage src={img} alt="" padding="p-1" backdrop={true} />
                     </button>
                   ))}
                 </div>

@@ -126,9 +126,10 @@ export default function PostForm({ editing, onClose, onSaved }) {
             <label className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/60 block mb-2">Images ({form.images.length})</label>
             <div className="grid grid-cols-3 gap-2">
               {form.images.map((img, i) => (
-                <div key={i} className="relative aspect-square rounded-lg overflow-hidden group border border-white/10">
-                  <img src={img} alt="" className="img-cover" />
-                  <button onClick={() => removeImage(i)} className="absolute top-1 right-1 w-6 h-6 grid place-items-center rounded-full bg-black/70 border border-white/20 opacity-0 group-hover:opacity-100 transition">
+                <div key={i} className="relative aspect-square rounded-lg overflow-hidden group border border-white/10 bg-[#05070B]">
+                  <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover blur-xl opacity-40 scale-110" aria-hidden="true" />
+                  <img src={img} alt="" className="relative w-full h-full object-contain p-1" />
+                  <button onClick={() => removeImage(i)} className="absolute top-1 right-1 w-6 h-6 grid place-items-center rounded-full bg-black/70 border border-white/20 opacity-0 group-hover:opacity-100 transition z-10">
                     <Trash2 className="w-3 h-3 text-red-300" />
                   </button>
                 </div>
@@ -150,8 +151,9 @@ export default function PostForm({ editing, onClose, onSaved }) {
               <div className="mt-6">
                 <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/60 mb-2">Preview</div>
                 <div className="glass p-4 rounded-xl relative overflow-hidden">
-                  <div className="aspect-video rounded-lg overflow-hidden bg-black/40">
-                    <img src={form.images[0]} alt="" className="img-cover" />
+                  <div className="rounded-lg overflow-hidden bg-[#05070B] relative">
+                    <img src={form.images[0]} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110" aria-hidden="true" />
+                    <img src={form.images[0]} alt="" className="relative w-full max-h-[280px] object-contain mx-auto" />
                   </div>
                   <div className="mt-3">
                     <div className="text-sm font-display font-bold">{form.title || "Untitled"}</div>
