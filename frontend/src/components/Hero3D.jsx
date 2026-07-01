@@ -116,12 +116,11 @@ function Icosa({ position, color }) {
 
 function CameraRig() {
   useFrame((state) => {
-  const { camera, mouse } = state;
-});
-    state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, state.mouse.x * 0.8, 0.05);
-    state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, state.mouse.y * 0.5, 0.05);
-    state.camera.lookAt(0, 0, 0);
-  }) || {};
+    const { camera, mouse } = state;
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.8, 0.05);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * 0.5, 0.05);
+    camera.lookAt(0, 0, 0);
+  });
   return null;
 }
 
