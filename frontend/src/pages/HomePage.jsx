@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, ShieldCheck, Rocket, Zap, TrendingUp, Users } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldCheck, Rocket, Zap } from "lucide-react";
 import Hero3D from "../components/Hero3D";
 import { Reveal, SectionLabel } from "../components/Reveal";
-import { GAMES_META, formatCompact, formatPrice } from "../lib/utils";
+import { GAMES_META, formatPrice } from "../lib/utils";
 import { listPosts, getGames } from "../lib/api";
 import ProductCard from "../components/ProductCard";
 
@@ -16,11 +16,10 @@ const FEATURES = [
 
 export default function HomePage() {
   const [featured, setFeatured] = useState([]);
-  const [games, setGames] = useState([]);
 
   useEffect(() => {
     listPosts({ limit: 8, sort: "newest" }).then((d) => setFeatured(d.items || [])).catch(() => {});
-    getGames().then(setGames).catch(() => {});
+    getGames().catch(() => {});
   }, []);
 
   return (
@@ -108,32 +107,39 @@ export default function HomePage() {
                   <div className="glass-strong clip-angled p-6 relative overflow-hidden">
                     <div className="absolute inset-0 opacity-30 pointer-events-none" style={{ background: "radial-gradient(400px 200px at 100% 0%, #00F0FF33, transparent)" }} />
                     <SectionLabel>Live Market Feed</SectionLabel>
-                    <div className="mt-5 space-y-3">
-                      {[
-                        { g: "ML", n: "Mythic Immortal · 42K", p: 890, c: "#0088FF" },
-                        { g: "PUBG", n: "Conqueror S28 · 300K UC", p: 1450, c: "#FF7A18" },
-                        { g: "SO2", n: "Gold Butterfly · Legendary", p: 620, c: "#4CC2FF" },
-                      ].map((r, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.4 + i * 0.1 }}
-                          className="flex items-center justify-between py-2 border-b border-white/5 last:border-0"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-md grid place-items-center font-mono text-[10px] font-bold"
-                              style={{ background: `${r.c}22`, color: r.c, border: `1px solid ${r.c}44` }}>
-                              {r.g}
-                            </div>
-                            <div>
-                              <div className="text-sm text-white/90">{r.n}</div>
-                              <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase">Verified</div>
-                            </div>
-                          </div>
-                          <div className="font-display font-bold text-white">${r.p}</div>
-                        </motion.div>
-                      ))}
+                    <div className="mt-5 space-y-3 min-h-[180px]">
+                      {featured.length === 0 ? (
+                        <div className="py-8 text-center">
+                          <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-white/40">Awaiting Drops</div>
+                          <div className="font-display font-bold text-lg mt-2 text-white/70">Standby, Operator</div>
+                          <p className="text-xs text-white/40 mt-2">The next elite listing is about to hit the grid.</p>
+                        </div>
+                      ) : (
+                        featured.slice(0, 3).map((r, i) => {
+                          const meta = GAMES_META[r.game_slug] || {};
+                          return (
+                            <motion.div
+                              key={r.id}
+                              initial={{ opacity: 0, x: 20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.4 + i * 0.1 }}
+                              className="flex items-center justify-between py-2 border-b border-white/5 last:border-0"
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className="w-8 h-8 rounded-md grid place-items-center font-mono text-[10px] font-bold flex-shrink-0"
+                                  style={{ background: `${meta.accent}22`, color: meta.accent2 || meta.accent, border: `1px solid ${meta.accent}44` }}>
+                                  {meta.short || "NX"}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-sm text-white/90 truncate">{r.title}</div>
+                                  <div className="font-mono text-[9px] text-white/40 tracking-widest uppercase">Verified</div>
+                                </div>
+                              </div>
+                              <div className="font-display font-bold text-white flex-shrink-0 ml-3">{formatPrice(r.price)}</div>
+                            </motion.div>
+                          );
+                        })
+                      )}
                     </div>
                   </div>
                 </div>
