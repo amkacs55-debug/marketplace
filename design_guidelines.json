@@ -1,0 +1,146 @@
+{
+  "theme_and_archetype": {
+    "theme": "Dark",
+    "archetype": "7 (Electric & Neon)",
+    "description": "Dark futuristic AAA gaming marketplace. Handcrafted, cinematic quality mixing Riot Games, Steam, and high-end tech (Apple/Tesla)."
+  },
+  "typography": {
+    "fonts": {
+      "headings": "Unbounded, sans-serif",
+      "body": "Outfit, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-5xl sm:text-6xl tracking-tighter font-black",
+      "h2": "text-4xl sm:text-5xl tracking-tight font-bold",
+      "h3": "text-2xl sm:text-3xl tracking-tight font-bold",
+      "body": "text-base leading-relaxed text-slate-300",
+      "labels": "text-xs tracking-[0.2em] uppercase font-bold text-cyan-400"
+    },
+    "instructions": "Never use Inter or Roboto. Headings must be Unbounded for a wide, aggressive, futuristic gaming feel. Outfit for clean, geometric body text readability. Make sure to import these fonts from Google Fonts in index.css or index.html."
+  },
+  "colors": {
+    "background": {
+      "primary": "#05070B",
+      "secondary": "#0B1220",
+      "tertiary": "#111827"
+    },
+    "accents": {
+      "electric_blue": "#00F0FF",
+      "purple": "#9D00FF",
+      "cyan": "#00FFFF",
+      "pubg_orange": "#FF4500",
+      "ml_blue": "#0088FF",
+      "standoff_dark_blue": "#0A192F"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#94A3B8",
+      "muted": "#475569"
+    }
+  },
+  "surfaces_and_materials": {
+    "glassmorphism": "bg-[#0B1220]/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]",
+    "glass_heavy": "bg-[#05070B]/80 backdrop-blur-2xl border border-white/5",
+    "glow_cyan": "shadow-[0_0_20px_rgba(0,240,255,0.4)]",
+    "glow_purple": "shadow-[0_0_20px_rgba(157,0,255,0.4)]"
+  },
+  "spacing_and_layout": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "section_gap": "py-24 md:py-32",
+    "grid_bento": "grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-6",
+    "cards": "p-6 rounded-2xl"
+  },
+  "components": {
+    "cursor": "Custom animated glowing cursor. Uses framer-motion to stretch on move and snap/magnetize to clickable buttons. Base: w-4 h-4 rounded-full bg-cyan-400/80 blur-[2px] mix-blend-screen.",
+    "buttons": {
+      "primary": "relative overflow-hidden group bg-transparent text-white font-bold uppercase tracking-wider px-8 py-4 border border-cyan-400/50 hover:border-cyan-400 transition-all. Add an inner glowing span that follows cursor or scales up on hover.",
+      "magnetic": "Wrap interactive buttons with a magnetic framer-motion container."
+    },
+    "cards": {
+      "marketplace": "Premium 3D hover product cards. Use framer-motion for tilt effect (perspective: 1000px, rotateX/Y on mouse move). Glass background, border border-white/10. Hover: border-cyan-400/50 + cyan shadow glow. Images must have object-cover (never stretched)."
+    },
+    "navbar": "Fixed z-50 top-0 w-full glassmorphism. Uses framer-motion `useScroll` to hide on scroll down and reveal on scroll up.",
+    "toast": "Beautiful animated glass toast. Position bottom-right. bg-[#0B1220]/80 backdrop-blur-lg border border-cyan-500/30 text-white rounded-xl shadow-[0_0_15px_rgba(0,255,255,0.2)].",
+    "post_creation": "Glassmorphism form with glowing input borders (focus: ring-2 ring-cyan-400). Multi-image upload with grid preview.",
+    "admin_dashboard": "Dark futuristic panels. Recharts with custom tooltips (glass background) and neon stroke colors (cyan, purple). Roles (Admin, Mod, Viewer) displayed with glowing badges."
+  },
+  "motion_and_interactions": {
+    "loading_screen": "Premium initial loader. Black background, glowing animated logo, cyan/purple particles floating, energy waves before revealing the app. z-[100].",
+    "backgrounds": "Animated backgrounds globally. Layer 1: #05070B. Layer 2: tsparticles (floating dust/stars). Layer 3: Moving CSS radial gradients (cyan/purple) with 30% opacity and mix-blend-screen. Layer 4: subtle noise texture.",
+    "scroll_reveal": "framer-motion whileInView={ opacity: 1, y: 0 } initial={ opacity: 0, y: 40 }. Mix scale, blur reveal, and mask reveal for sections.",
+    "hero_3d": "Floating 3D scene. Requires @react-three/fiber and @react-three/drei. Floating gaming controller model, RGB lights, energy ring, holographic cards, and dynamic lighting moving with mouse parallax."
+  },
+  "media_assets": {
+    "hero_backgrounds": [
+      {
+        "category": "hero_controller",
+        "url": "https://images.pexels.com/photos/18223728/pexels-photo-18223728.jpeg",
+        "description": "Brightly lit gaming controller against dark backdrop"
+      },
+      {
+        "category": "hero_controller_alt",
+        "url": "https://images.pexels.com/photos/596750/pexels-photo-596750.jpeg",
+        "description": "Illuminated gaming controller with blue lights"
+      }
+    ],
+    "games": [
+      {
+        "category": "mobile_legends",
+        "url": "https://images.unsplash.com/photo-1718632714530-4bb8a792bd51",
+        "theme": "Blue fantasy magic, glowing",
+        "description": "Fantasy landscape blue glowing magic"
+      },
+      {
+        "category": "pubg_mobile",
+        "url": "https://images.unsplash.com/photo-1579912436616-f74ceee1ae07",
+        "theme": "Military, orange smoke, tactical",
+        "description": "Soldier with orange smoke tactical"
+      },
+      {
+        "category": "standoff_2",
+        "url": "https://images.pexels.com/photos/19964747/pexels-photo-19964747.jpeg",
+        "theme": "Dark tactical blue, SWAT, weapons",
+        "description": "Tactical officer aiming rifle in urban setting at night"
+      }
+    ],
+    "marketplace_items": [
+      {
+        "category": "gaming_keyboard_rgb",
+        "url": "https://images.unsplash.com/photo-1636487658576-006362feb9ee",
+        "description": "Person typing on RGB keyboard"
+      },
+      {
+        "category": "esports_setup",
+        "url": "https://images.unsplash.com/photo-1558742619-fd82741daa99",
+        "description": "Esports desktop gaming setup"
+      }
+    ]
+  },
+  "tech_stack_libraries": [
+    "framer-motion",
+    "@react-three/fiber",
+    "@react-three/drei",
+    "lucide-react",
+    "recharts",
+    "react-tsparticles",
+    "tsparticles",
+    "sonner"
+  ],
+  "testing_requirements": {
+    "data-testid": "All interactive elements, buttons, links, inputs, and major informational blocks MUST include a `data-testid` attribute. Convention: kebab-case, role-based. e.g., `data-testid='marketplace-buy-button'` or `data-testid='admin-login-submit'`."
+  },
+  "specific_page_instructions": {
+    "account_detail": "Gallery with image zoom and lightbox. Layout: Left side sticky large image, bottom thumbnail strip. Right side: Price, glowing Buy button, Description, Facebook/Phone contact info, share/favorite actions.",
+    "admin_dashboard": "Route: /admin25. Glass grid layout. Cards for 300K-900K, 901K-1.5M, 1.6M-15M groups. Analytics charts must have transparent backgrounds and neon line strokes.",
+    "marketplace_search": "Realtime search input with glowing border. Filters panel (Newest/Oldest/Highest Price/Lowest Price) using custom animated dropdowns."
+  },
+  "instructions_to_main_agent": [
+    "You have .js files not .tsx files, so all code implementations must use JavaScript (.jsx/.js), NOT TypeScript.",
+    "All interactive elements must include a `data-testid` attribute.",
+    "Ensure image `object-fit` is always `cover` to prevent stretching on marketplace cards.",
+    "Use framer-motion heavily for micro-interactions: magnetic buttons, smooth scroll reveals, and the custom stretching cursor.",
+    "For the 3D Hero, implement a @react-three/fiber canvas with floating models, particle effects, and pointer-based parallax.",
+    "Ensure all backgrounds have #05070B as base, then layer glassmorphism and glow effects on top. Never use pure black #000000 or plain greys."
+  ]
+}
